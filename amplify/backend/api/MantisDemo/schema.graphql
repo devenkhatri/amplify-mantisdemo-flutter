@@ -1,0 +1,15 @@
+enum Statuses {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+type Orders @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  TrackingNo: String
+  ProductName: String
+  Quantity: Int
+  Status: Statuses
+  TotalAmount: Float
+}
+ 

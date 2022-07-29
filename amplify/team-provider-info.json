@@ -1,0 +1,15 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mantisdemo-staging-91729-authRole",
+      "UnauthRoleArn": "arn:aws:iam::358493823211:role/amplify-mantisdemo-staging-91729-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::358493823211:role/amplify-mantisdemo-staging-91729-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-mantisdemo-staging-91729-deployment",
+      "UnauthRoleName": "amplify-mantisdemo-staging-91729-unauthRole",
+      "StackName": "amplify-mantisdemo-staging-91729",
+      "StackId": "arn:aws:cloudformation:ap-south-1:358493823211:stack/amplify-mantisdemo-staging-91729/f08676c0-0d8c-11ed-a828-023940c6af3e",
+      "AmplifyAppId": "d2yams2lvfzgsf"
+    }
+  }
+}
