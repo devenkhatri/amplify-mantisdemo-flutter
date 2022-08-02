@@ -3,7 +3,7 @@
   "serviceConfiguration": {
     "apiName": "MantisDemo",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/tmp/amplify-986e73d3-273b-4d29-955b-0f3972d38976/amplify/backend/api/MantisDemo/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-b161c5a7-d1b6-400d-8eb3-973e5deb9276/amplify/backend/api/MantisDemo/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
       "keyDescription": "api key description",

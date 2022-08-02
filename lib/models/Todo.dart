@@ -19,21 +19,17 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
-import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Orders type in your schema. */
+/** This is an auto generated class representing the Todo type in your schema. */
 @immutable
-class Orders extends Model {
-  static const classType = const _OrdersModelType();
+class Todo extends Model {
+  static const classType = const _TodoModelType();
   final String id;
-  final String? _TrackingNo;
-  final String? _ProductName;
-  final int? _Quantity;
-  final Statuses? _Status;
-  final double? _TotalAmount;
+  final String? _title;
+  final bool? _isComplete;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -45,24 +41,12 @@ class Orders extends Model {
     return id;
   }
   
-  String? get TrackingNo {
-    return _TrackingNo;
+  String? get title {
+    return _title;
   }
   
-  String? get ProductName {
-    return _ProductName;
-  }
-  
-  int? get Quantity {
-    return _Quantity;
-  }
-  
-  Statuses? get Status {
-    return _Status;
-  }
-  
-  double? get TotalAmount {
-    return _TotalAmount;
+  bool? get isComplete {
+    return _isComplete;
   }
   
   TemporalDateTime? get createdAt {
@@ -73,16 +57,13 @@ class Orders extends Model {
     return _updatedAt;
   }
   
-  const Orders._internal({required this.id, TrackingNo, ProductName, Quantity, Status, TotalAmount, createdAt, updatedAt}): _TrackingNo = TrackingNo, _ProductName = ProductName, _Quantity = Quantity, _Status = Status, _TotalAmount = TotalAmount, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Todo._internal({required this.id, title, isComplete, createdAt, updatedAt}): _title = title, _isComplete = isComplete, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Orders({String? id, String? TrackingNo, String? ProductName, int? Quantity, Statuses? Status, double? TotalAmount}) {
-    return Orders._internal(
+  factory Todo({String? id, String? title, bool? isComplete}) {
+    return Todo._internal(
       id: id == null ? UUID.getUUID() : id,
-      TrackingNo: TrackingNo,
-      ProductName: ProductName,
-      Quantity: Quantity,
-      Status: Status,
-      TotalAmount: TotalAmount);
+      title: title,
+      isComplete: isComplete);
   }
   
   bool equals(Object other) {
@@ -92,13 +73,10 @@ class Orders extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Orders &&
+    return other is Todo &&
       id == other.id &&
-      _TrackingNo == other._TrackingNo &&
-      _ProductName == other._ProductName &&
-      _Quantity == other._Quantity &&
-      _Status == other._Status &&
-      _TotalAmount == other._TotalAmount;
+      _title == other._title &&
+      _isComplete == other._isComplete;
   }
   
   @override
@@ -108,13 +86,10 @@ class Orders extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Orders {");
+    buffer.write("Todo {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("TrackingNo=" + "$_TrackingNo" + ", ");
-    buffer.write("ProductName=" + "$_ProductName" + ", ");
-    buffer.write("Quantity=" + (_Quantity != null ? _Quantity!.toString() : "null") + ", ");
-    buffer.write("Status=" + (_Status != null ? enumToString(_Status)! : "null") + ", ");
-    buffer.write("TotalAmount=" + (_TotalAmount != null ? _TotalAmount!.toString() : "null") + ", ");
+    buffer.write("title=" + "$_title" + ", ");
+    buffer.write("isComplete=" + (_isComplete != null ? _isComplete!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -122,39 +97,30 @@ class Orders extends Model {
     return buffer.toString();
   }
   
-  Orders copyWith({String? id, String? TrackingNo, String? ProductName, int? Quantity, Statuses? Status, double? TotalAmount}) {
-    return Orders._internal(
+  Todo copyWith({String? id, String? title, bool? isComplete}) {
+    return Todo._internal(
       id: id ?? this.id,
-      TrackingNo: TrackingNo ?? this.TrackingNo,
-      ProductName: ProductName ?? this.ProductName,
-      Quantity: Quantity ?? this.Quantity,
-      Status: Status ?? this.Status,
-      TotalAmount: TotalAmount ?? this.TotalAmount);
+      title: title ?? this.title,
+      isComplete: isComplete ?? this.isComplete);
   }
   
-  Orders.fromJson(Map<String, dynamic> json)  
+  Todo.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _TrackingNo = json['TrackingNo'],
-      _ProductName = json['ProductName'],
-      _Quantity = (json['Quantity'] as num?)?.toInt(),
-      _Status = enumFromString<Statuses>(json['Status'], Statuses.values),
-      _TotalAmount = (json['TotalAmount'] as num?)?.toDouble(),
+      _title = json['title'],
+      _isComplete = json['isComplete'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'TrackingNo': _TrackingNo, 'ProductName': _ProductName, 'Quantity': _Quantity, 'Status': enumToString(_Status), 'TotalAmount': _TotalAmount, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'title': _title, 'isComplete': _isComplete, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "orders.id");
-  static final QueryField TRACKINGNO = QueryField(fieldName: "TrackingNo");
-  static final QueryField PRODUCTNAME = QueryField(fieldName: "ProductName");
-  static final QueryField QUANTITY = QueryField(fieldName: "Quantity");
-  static final QueryField STATUS = QueryField(fieldName: "Status");
-  static final QueryField TOTALAMOUNT = QueryField(fieldName: "TotalAmount");
+  static final QueryField ID = QueryField(fieldName: "todo.id");
+  static final QueryField TITLE = QueryField(fieldName: "title");
+  static final QueryField ISCOMPLETE = QueryField(fieldName: "isComplete");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Orders";
-    modelSchemaDefinition.pluralName = "Orders";
+    modelSchemaDefinition.name = "Todo";
+    modelSchemaDefinition.pluralName = "Todos";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
@@ -170,33 +136,15 @@ class Orders extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Orders.TRACKINGNO,
+      key: Todo.TITLE,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Orders.PRODUCTNAME,
+      key: Todo.ISCOMPLETE,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Orders.QUANTITY,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.int)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Orders.STATUS,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.enumeration)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Orders.TOTALAMOUNT,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.double)
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -215,11 +163,11 @@ class Orders extends Model {
   });
 }
 
-class _OrdersModelType extends ModelType<Orders> {
-  const _OrdersModelType();
+class _TodoModelType extends ModelType<Todo> {
+  const _TodoModelType();
   
   @override
-  Orders fromJson(Map<String, dynamic> jsonData) {
-    return Orders.fromJson(jsonData);
+  Todo fromJson(Map<String, dynamic> jsonData) {
+    return Todo.fromJson(jsonData);
   }
 }

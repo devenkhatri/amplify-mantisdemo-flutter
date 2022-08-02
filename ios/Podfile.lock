@@ -9,6 +9,12 @@ PODS:
     - Flutter
     - SwiftFormat/CLI
     - SwiftLint
+  - amplify_auth_cognito_ios (0.0.1):
+    - Amplify (= 1.25.0)
+    - amplify_core
+    - AmplifyPlugins/AWSCognitoAuthPlugin (= 1.25.0)
+    - Flutter
+    - ObjectMapper
   - amplify_core (0.0.1):
     - Flutter
     - SwiftFormat/CLI
@@ -60,6 +66,7 @@ PODS:
     - Amplify (= 1.25.0)
     - AWSCore (~> 2.27.0)
   - Flutter (1.0.0)
+  - ObjectMapper (4.2.0)
   - SQLite.swift (0.13.2):
     - SQLite.swift/standard (= 0.13.2)
   - SQLite.swift/standard (0.13.2)
@@ -69,6 +76,7 @@ PODS:
 
 DEPENDENCIES:
   - amplify_api_ios (from `.symlinks/plugins/amplify_api_ios/ios`)
+  - amplify_auth_cognito_ios (from `.symlinks/plugins/amplify_auth_cognito_ios/ios`)
   - amplify_core (from `.symlinks/plugins/amplify_core/ios`)
   - amplify_datastore (from `.symlinks/plugins/amplify_datastore/ios`)
   - amplify_flutter_ios (from `.symlinks/plugins/amplify_flutter_ios/ios`)
@@ -85,6 +93,7 @@ SPEC REPOS:
     - AWSCore
     - AWSMobileClient
     - AWSPluginsCore
+    - ObjectMapper
     - SQLite.swift
     - Starscream
     - SwiftFormat
@@ -93,6 +102,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   amplify_api_ios:
     :path: ".symlinks/plugins/amplify_api_ios/ios"
+  amplify_auth_cognito_ios:
+    :path: ".symlinks/plugins/amplify_auth_cognito_ios/ios"
   amplify_core:
     :path: ".symlinks/plugins/amplify_core/ios"
   amplify_datastore:
@@ -105,6 +116,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Amplify: 4e1839747f51c5f28f95ce36ef6d356f032b42b7
   amplify_api_ios: 769bc2a5f7f8599bcdf070a1ac55831ed10c741c
+  amplify_auth_cognito_ios: 8a014f5d5e085265e13a270dc03fbe0818bb1f54
   amplify_core: e67fe0c53845db08aced670bfc7370b1329d2798
   amplify_datastore: 8f103a60f6193127bba035b8ee6090f97a9a3449
   amplify_flutter_ios: 59c43b6b6ff6ccfc59e18eef279d9d6b8fef8cca
@@ -117,6 +129,7 @@ SPEC CHECKSUMS:
   AWSMobileClient: f1670732dcd613abe3badb35c91d8980e7bb1f08
   AWSPluginsCore: c29c4b91c4ecd7376b85288615bb482f409a0b73
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   SQLite.swift: 4fc2be46c36392e3b87afe6fe7f1801c1daa07ef
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   SwiftFormat: 53864d9acbae3a954eb413736729500fe7051435

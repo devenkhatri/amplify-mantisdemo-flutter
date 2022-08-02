@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // Amplify Flutter Packages
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
-// import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_api/amplify_api.dart';
 
 // Generated in previous step
 import 'models/ModelProvider.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           // or simply save your changes to "hot reload" in a Flutter IDE).
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
-          primarySwatch: Colors.blue),
+          primarySwatch: Colors.deepOrange),
       home: const MyHomePage(title: 'Mantis - Order Approval App'),
     );
   }
@@ -56,28 +56,63 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool _amplifyConfigured = false;
-  final List<Orders> _orders = [];
+  bool _isLoading = true;
+  List<Orders> _orders = [];
 
   @override
   initState() {
     super.initState();
-    _configureAmplify();
+    // initialize the app
+    _initializeApp();
   }
 
-  void _configureAmplify() async {
-    // await Amplify.addPlugin(AmplifyAPI()); // UNCOMMENT this line after backend is deployed
-    await Amplify.addPlugin(
-        AmplifyDataStore(modelProvider: ModelProvider.instance));
+  Future<void> _initializeApp() async {
+    // configure Amplify
+    if (!Amplify.isConfigured) {
+      await _configureAmplify();
+    }
 
-    // Once Plugins are added, configure Amplify
-    await Amplify.configure(amplifyconfig);
+    print('Amplify Configured :' + Amplify.isConfigured.toString());
+
+    //fetch data from amplify
+    await _fetchOrders();
+
+    print('All Orders: $_orders');
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _configureAmplify() async {
     try {
-      setState(() {
-        _amplifyConfigured = true;
-      });
+      await Amplify.addPlugin(
+          AmplifyAPI()); // UNCOMMENT this line after backend is deployed
+      await Amplify.addPlugin(
+          AmplifyDataStore(modelProvider: ModelProvider.instance));
+
+      // Once Plugins are added, configure Amplify
+      await Amplify.configure(amplifyconfig);
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> _fetchOrders() async {
+    try {
+      // query for all Order entries by passing the Orders classType to
+      // Amplify.DataStore.query()
+      List<Orders> allOrders = await Amplify.DataStore.query(Orders.classType);
+      print('Inside function - All Orders: $allOrders');
+      List<Todo> allTodos = await Amplify.DataStore.query(Todo.classType);
+      print('Inside function - All Todos: $allTodos');
+
+      // update the ui state to reflect fetched todos
+      setState(() {
+        _orders = allOrders;
+      });
+    } catch (e) {
+      print('An error occurred while querying Orders: $e');
     }
   }
 
@@ -95,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: !_amplifyConfigured
+      body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
@@ -120,7 +155,7 @@ class ListOrders extends StatelessWidget {
 
   Widget _emptyOrderList() {
     return const Center(
-      child: Text('No orders yet...'),
+      child: Text('No orders yet.....'),
     );
   }
 
