@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 
 // Generated in previous step
 import 'models/ModelProvider.dart';
@@ -31,14 +33,14 @@ class MyApp extends StatelessWidget {
           // or simply save your changes to "hot reload" in a Flutter IDE).
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
-          primarySwatch: Colors.deepOrange),
-      home: const MyHomePage(title: 'Mantis - Order Approval App'),
+          primarySwatch: Colors.teal),
+      home: const TodosView(title: 'Mantis - Order Approval App'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class TodosView extends StatefulWidget {
+  const TodosView({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -52,18 +54,25 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<TodosView> createState() => _TodosViewState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _TodosViewState extends State<TodosView> {
   bool _isLoading = true;
-  List<Orders> _orders = [];
+
+  List<Todo> _todos = [];
+
+  // Amplify Plugins
+  final AmplifyDataStore _dataStorePlugin =
+      AmplifyDataStore(modelProvider: ModelProvider.instance);
+  final AmplifyAPI _apiPlugin = AmplifyAPI();
+  final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
 
   @override
   initState() {
-    super.initState();
     // initialize the app
     _initializeApp();
+    super.initState();
   }
 
   Future<void> _initializeApp() async {
@@ -71,13 +80,16 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!Amplify.isConfigured) {
       await _configureAmplify();
     }
+    // .then((value) => _fetchTodos());
 
-    print('Amplify Configured :' + Amplify.isConfigured.toString());
+    // fetch the Todo from DataStore
+    // _fetchTodos();
 
-    //fetch data from amplify
-    await _fetchOrders();
+    // _subscription = Amplify.DataStore.observe(Todo.classType).listen((e) {
+    //   _fetchTodos();
+    // });
 
-    print('All Orders: $_orders');
+    await _fetchTodos();
 
     setState(() {
       _isLoading = false;
@@ -86,33 +98,41 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _configureAmplify() async {
     try {
-      await Amplify.addPlugin(
-          AmplifyAPI()); // UNCOMMENT this line after backend is deployed
-      await Amplify.addPlugin(
-          AmplifyDataStore(modelProvider: ModelProvider.instance));
+      // add AMplify Plugins
+      await Amplify.addPlugins([_dataStorePlugin, _apiPlugin, _authPlugin]);
 
-      // Once Plugins are added, configure Amplify
       await Amplify.configure(amplifyconfig);
-    } catch (e) {
-      print(e);
+    } catch (err) {
+      debugPrint('Erro occured while configuring Amplify $err');
     }
   }
 
-  Future<void> _fetchOrders() async {
+  Future<void> _fetchTodos() async {
     try {
-      // query for all Order entries by passing the Orders classType to
+      // query for all Todo entries by passing the Todo classType to
       // Amplify.DataStore.query()
-      List<Orders> allOrders = await Amplify.DataStore.query(Orders.classType);
-      print('Inside function - All Orders: $allOrders');
-      List<Todo> allTodos = await Amplify.DataStore.query(Todo.classType);
-      print('Inside function - All Todos: $allTodos');
+      // List<Todo> updatedTodos = await Amplify.DataStore.query(Todo.classType);
+      Amplify.DataStore.observeQuery(
+        Todo.classType,
+      ).listen((QuerySnapshot<Todo> snapshot) {
+        var count = snapshot.items.length;
+        var now = DateTime.now().toIso8601String();
+        bool status = snapshot.isSynced;
+        print(
+            '[Observe Query] Blog snapshot received with $count models, status: $status at $now');
+        setState(() {
+          _todos = snapshot.items;
+          print('fetched Todos $_todos');
+        });
+      });
 
       // update the ui state to reflect fetched todos
-      setState(() {
-        _orders = allOrders;
-      });
+      // print('fetched Todos $updatedTodos');
+      // setState(() {
+      //   _todos = updatedTodos;
+      // });
     } catch (e) {
-      print('An error occurred while querying Orders: $e');
+      print('An error occurred while querying Todos: $e');
     }
   }
 
@@ -124,6 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    print('Is Loading $_isLoading');
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -131,10 +152,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListOrders(orders: _orders),
+          ? const Center(child: CircularProgressIndicator())
+          : TodosList(todos: _todos),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: _incrementCounter,
       //   tooltip: 'Increment',
@@ -144,33 +163,79 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class ListOrders extends StatelessWidget {
-  final List<Orders> orders;
-  const ListOrders({required this.orders, Key? key}) : super(key: key);
+class TodosList extends StatelessWidget {
+  final List<Todo> todos;
+
+  const TodosList({required this.todos, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return orders.isNotEmpty ? _orderListView(orders) : _emptyOrderList();
+    return todos.isNotEmpty
+        ? ListView(
+            padding: const EdgeInsets.all(8),
+            children: todos.map((todo) => TodoItem(todo: todo)).toList())
+        : const Center(child: Text('Tap button below to add a todo!'));
+  }
+}
+
+class TodoItem extends StatelessWidget {
+  final double iconSize = 24.0;
+  final Todo todo;
+
+  const TodoItem({required this.todo, Key? key}) : super(key: key);
+
+  void _deleteTodo(BuildContext context) async {
+    try {
+      // to delete data from DataStore, we pass the model instance to
+      // Amplify.DataStore.delete()
+      await Amplify.DataStore.delete(todo);
+    } catch (e) {
+      print('An error occurred while deleting Todo: $e');
+    }
   }
 
-  Widget _emptyOrderList() {
-    return const Center(
-      child: Text('No orders yet.....'),
-    );
+  Future<void> _toggleIsComplete() async {
+    // copy the Todo we wish to update, but with updated properties
+    Todo updatedTodo = todo.copyWith(isComplete: !(todo.isComplete ?? false));
+    try {
+      // to update data in DataStore, we again pass an instance of a model to
+      // Amplify.DataStore.save()
+      await Amplify.DataStore.save(updatedTodo);
+    } catch (e) {
+      print('An error occurred while saving Todo: $e');
+    }
   }
 
-  Widget _orderListView(List<Orders> orders) {
-    return ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (context, index) {
-          final order = orders[index];
-          return Card(
-            child: CheckboxListTile(
-              title: Text(order.ProductName.toString()),
-              value: order.Status == Statuses.APPROVED,
-              onChanged: (bool? value) {},
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: InkWell(
+        onTap: () {
+          _toggleIsComplete();
+        },
+        onLongPress: () {
+          _deleteTodo(context);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(todo.title ?? 'No Title',
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.bold)),
+              ],
             ),
-          );
-        });
+            Icon(
+                (todo.isComplete ?? false)
+                    ? Icons.check_box
+                    : Icons.check_box_outline_blank,
+                size: iconSize),
+          ]),
+        ),
+      ),
+    );
   }
 }

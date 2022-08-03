@@ -146,7 +146,7 @@ class Orders extends Model {
     'id': id, 'TrackingNo': _TrackingNo, 'ProductName': _ProductName, 'Quantity': _Quantity, 'Status': enumToString(_Status), 'TotalAmount': _TotalAmount, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "orders.id");
+  static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField TRACKINGNO = QueryField(fieldName: "TrackingNo");
   static final QueryField PRODUCTNAME = QueryField(fieldName: "ProductName");
   static final QueryField QUANTITY = QueryField(fieldName: "Quantity");

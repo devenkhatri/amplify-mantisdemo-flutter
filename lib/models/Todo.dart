@@ -115,7 +115,7 @@ class Todo extends Model {
     'id': id, 'title': _title, 'isComplete': _isComplete, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "todo.id");
+  static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField TITLE = QueryField(fieldName: "title");
   static final QueryField ISCOMPLETE = QueryField(fieldName: "isComplete");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
