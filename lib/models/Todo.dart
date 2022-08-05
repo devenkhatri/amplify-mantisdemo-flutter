@@ -28,7 +28,8 @@ import 'package:flutter/foundation.dart';
 class Todo extends Model {
   static const classType = const _TodoModelType();
   final String id;
-  final String? _title;
+  final String? _name;
+  final String? _description;
   final bool? _isComplete;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
@@ -41,12 +42,34 @@ class Todo extends Model {
     return id;
   }
   
-  String? get title {
-    return _title;
+  String get name {
+    try {
+      return _name!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
-  bool? get isComplete {
-    return _isComplete;
+  String? get description {
+    return _description;
+  }
+  
+  bool get isComplete {
+    try {
+      return _isComplete!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   TemporalDateTime? get createdAt {
@@ -57,12 +80,13 @@ class Todo extends Model {
     return _updatedAt;
   }
   
-  const Todo._internal({required this.id, title, isComplete, createdAt, updatedAt}): _title = title, _isComplete = isComplete, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Todo._internal({required this.id, required name, description, required isComplete, createdAt, updatedAt}): _name = name, _description = description, _isComplete = isComplete, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Todo({String? id, String? title, bool? isComplete}) {
+  factory Todo({String? id, required String name, String? description, required bool isComplete}) {
     return Todo._internal(
       id: id == null ? UUID.getUUID() : id,
-      title: title,
+      name: name,
+      description: description,
       isComplete: isComplete);
   }
   
@@ -75,7 +99,8 @@ class Todo extends Model {
     if (identical(other, this)) return true;
     return other is Todo &&
       id == other.id &&
-      _title == other._title &&
+      _name == other._name &&
+      _description == other._description &&
       _isComplete == other._isComplete;
   }
   
@@ -88,7 +113,8 @@ class Todo extends Model {
     
     buffer.write("Todo {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("title=" + "$_title" + ", ");
+    buffer.write("name=" + "$_name" + ", ");
+    buffer.write("description=" + "$_description" + ", ");
     buffer.write("isComplete=" + (_isComplete != null ? _isComplete!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
@@ -97,26 +123,29 @@ class Todo extends Model {
     return buffer.toString();
   }
   
-  Todo copyWith({String? id, String? title, bool? isComplete}) {
+  Todo copyWith({String? id, String? name, String? description, bool? isComplete}) {
     return Todo._internal(
       id: id ?? this.id,
-      title: title ?? this.title,
+      name: name ?? this.name,
+      description: description ?? this.description,
       isComplete: isComplete ?? this.isComplete);
   }
   
   Todo.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _title = json['title'],
+      _name = json['name'],
+      _description = json['description'],
       _isComplete = json['isComplete'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'title': _title, 'isComplete': _isComplete, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 'isComplete': _isComplete, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField TITLE = QueryField(fieldName: "title");
+  static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
   static final QueryField ISCOMPLETE = QueryField(fieldName: "isComplete");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Todo";
@@ -136,14 +165,20 @@ class Todo extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Todo.TITLE,
+      key: Todo.NAME,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Todo.DESCRIPTION,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Todo.ISCOMPLETE,
-      isRequired: false,
+      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
     
