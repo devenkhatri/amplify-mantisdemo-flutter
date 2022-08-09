@@ -1,6 +1,6 @@
 enum Statuses {
-  APPROVED
   PENDING
+  APPROVED
   REJECTED
 }
 
@@ -11,12 +11,5 @@ type Orders @model @auth(rules: [{allow: public}]) {
   Quantity: Int
   Status: Statuses
   TotalAmount: Float
-}
-
-type Todo @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  name: String!
-  description: String
-  isComplete: Boolean!
 }
  
