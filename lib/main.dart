@@ -162,7 +162,6 @@ class _MyHomePageState extends State<MyHomePage> {
 class ListOrders extends StatelessWidget {
   final List<Orders> orders;
   const ListOrders({required this.orders, Key? key}) : super(key: key);
-  final double iconSize = 24.0;
 
   @override
   Widget build(BuildContext context) {
@@ -194,14 +193,25 @@ class ListOrders extends StatelessWidget {
         itemCount: orders.length,
         itemBuilder: (context, index) {
           final order = orders[index];
-          final Color textColor =
-              order.Status == Statuses.APPROVED ? Colors.blue : Colors.orange;
+          final double iconSize = 16.0;
+          Color iconColor = Colors.red;
+          if (order.Status == Statuses.APPROVED) iconColor = Colors.green;
+          if (order.Status == Statuses.PENDING) iconColor = Colors.orange;
+          if (order.Status == Statuses.REJECTED) iconColor = Colors.red;
           return Card(
             child: CheckboxListTile(
               // title: Text(order.ProductName.toString()),
               title: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(children: [
+                  Icon(
+                    order.Status == Statuses.APPROVED
+                        ? Icons.circle
+                        : Icons.circle,
+                    size: iconSize,
+                    color: iconColor,
+                  ),
+                  Padding(padding: EdgeInsets.all(8.0)),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,11 +225,6 @@ class ListOrders extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // Icon(
-                  //     order.Status == Statuses.APPROVED
-                  //         ? Icons.check_box
-                  //         : Icons.check_box_outline_blank,
-                  //     size: iconSize),
                 ]),
               ),
               value: order.Status == Statuses.APPROVED,
