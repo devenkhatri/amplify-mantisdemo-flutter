@@ -104,8 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // each time a snapshot is received, the following will happen:
     // _isLoading is set to false if it is not already false
     // _orders is set to the value in the latest snapshot
-    _subscription = Amplify.DataStore.observeQuery(Orders.classType)
-        .listen((QuerySnapshot<Orders> snapshot) {
+    _subscription = Amplify.DataStore.observeQuery(
+      Orders.classType,
+      sortBy: [Orders.TRACKINGNO.ascending()],
+    ).listen((QuerySnapshot<Orders> snapshot) {
       setState(() {
         if (_isLoading) _isLoading = false;
         _orders = snapshot.items;
