@@ -16,5 +16,12 @@ export type AmplifyDependentResourcesAttributes = {
             "AppClientIDWeb": "string",
             "AppClientID": "string"
         }
+    },
+    "analytics": {
+        "amplifiedtodo": {
+            "Region": "string",
+            "Id": "string",
+            "appName": "string"
+        }
     }
 }

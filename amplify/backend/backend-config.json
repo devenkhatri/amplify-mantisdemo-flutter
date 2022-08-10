@@ -56,5 +56,11 @@
         ]
       }
     }
+  },
+  "analytics": {
+    "amplifiedtodo": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }
